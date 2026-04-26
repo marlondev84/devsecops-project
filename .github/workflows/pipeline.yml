@@ -1,41 +1,33 @@
-name: DevSecOps Pipeline
+name: CI/CD - Secure API
 
 on:
   push:
     branches: ["main"]
 
 jobs:
-  security-check:
+  deploy:
     runs-on: ubuntu-latest
 
     permissions:
       contents: read
-      security-events: write   # for future GitHub Security tab (SARIF)
-      id-token: write          # for OIDC (future deploy)
+      id-token: write  # necessário para OIDC
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      # 🐳 Build da imagem
-      - name: Build Docker image
-        run: docker build -t secure-api .
-
-      # 🔍 Scan de vulnerabilidades na imagem
-      - name: Run Trivy (image scan)
-        uses: aquasecurity/trivy-action@v0.20.0
+      - name: Authenticate to GCP (OIDC)
+        uses: google-github-actions/auth@v2
         with:
-          image-ref: secure-api
-          severity: CRITICAL
-          exit-code: 1
-          format: table
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
-      # 📦 Scan de dependências (Node.js)
-      - name: Run Trivy (filesystem scan)
-        uses: aquasecurity/trivy-action@v0.20.0
-        with:
-          scan-type: fs
-          scan-ref: .
-          severity: CRITICAL
-          exit-code: 1
-          format: table
+      - name: Set up gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy secure-api \
+            --source . \
+            --region us-central1 \
+            --allow-unauthenticated

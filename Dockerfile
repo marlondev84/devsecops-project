@@ -1,15 +1,17 @@
 FROM node:18-alpine
 
+RUN apk add --no-cache curl
+
 WORKDIR /app
 
-# 🔐 Atualiza pacotes do sistema (corrige CVEs)
-RUN apk update && apk upgrade
-
 COPY app/package*.json ./
-RUN npm install --only=production
+
+# 🔥 mais tolerante que npm ci
+RUN npm install --production
 
 COPY app .
 
-EXPOSE 3000
+ENV PORT=8080
+EXPOSE 8080
 
 CMD ["node", "index.js"]

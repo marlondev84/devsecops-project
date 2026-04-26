@@ -1,31 +1,62 @@
 const express = require("express");
 const helmet = require("helmet");
+const jwt = require("jsonwebtoken");
+const rateLimit = require("express-rate-limit");
 
 const app = express();
 
-// Middleware de segurança
+// Security middleware
 app.use(helmet());
-
-// Middleware para parsing de JSON
 app.use(express.json());
 
-// Rota principal
+// Rate limiting (anti-abuse)
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100
+});
+app.use(limiter);
+
+// Secret (em produção viria do env)
+const SECRET = process.env.JWT_SECRET || "supersecret";
+
+// Public route
 app.get("/", (req, res) => {
-  res.status(200).json({
-    message: "Secure API running 🚀",
-  });
+  res.json({ message: "Secure API running 🚀" });
 });
 
-// Rota de healthcheck (boa prática para cloud)
+// Healthcheck
 app.get("/health", (req, res) => {
-  res.status(200).json({
-    status: "ok",
-  });
+  res.json({ status: "ok" });
 });
 
-// Porta (Cloud Run usa variável de ambiente)
-const PORT = process.env.PORT || 3000;
+// Login (gera token)
+app.post("/login", (req, res) => {
+  const { username } = req.body;
 
-app.listen(PORT, () => {
+  const token = jwt.sign({ user: username }, SECRET, {
+    expiresIn: "1h"
+  });
+
+  res.json({ token });
+});
+
+// Protected route
+app.get("/protected", (req, res) => {
+  const auth = req.headers.authorization;
+
+  if (!auth) return res.status(401).json({ error: "No token" });
+
+  const token = auth.split(" ")[1];
+
+  try {
+    const decoded = jwt.verify(token, SECRET);
+    res.json({ message: "Protected data", user: decoded });
+  } catch {
+    res.status(403).json({ error: "Invalid token" });
+  }
+});
+
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });
