@@ -1,62 +1,70 @@
 const express = require("express");
 const helmet = require("helmet");
 const jwt = require("jsonwebtoken");
-const rateLimit = require("express-rate-limit");
-
 const app = express();
 
-// Security middleware
 app.use(helmet());
 app.use(express.json());
 
-// Rate limiting (anti-abuse)
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100
-});
-app.use(limiter);
+const PORT = process.env.PORT || 3000;
+const SECRET = process.env.JWT_SECRET || "dev-secret";
 
-// Secret (em produção viria do env)
-const SECRET = process.env.JWT_SECRET || "supersecret";
+// Usuário mock (simples para demo)
+const user = {
+  id: 1,
+  username: "admin",
+  password: "123456"
+};
 
-// Public route
-app.get("/", (req, res) => {
-  res.json({ message: "Secure API running 🚀" });
-});
-
-// Healthcheck
-app.get("/health", (req, res) => {
-  res.json({ status: "ok" });
-});
-
-// Login (gera token)
+// 🔐 Login
 app.post("/login", (req, res) => {
-  const { username } = req.body;
+  const { username, password } = req.body;
 
-  const token = jwt.sign({ user: username }, SECRET, {
-    expiresIn: "1h"
-  });
+  if (username !== user.username || password !== user.password) {
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
+
+  const token = jwt.sign({ id: user.id }, SECRET, { expiresIn: "1h" });
 
   res.json({ token });
 });
 
-// Protected route
-app.get("/protected", (req, res) => {
-  const auth = req.headers.authorization;
+// 🔒 Middleware de autenticação
+function authMiddleware(req, res, next) {
+  const authHeader = req.headers.authorization;
 
-  if (!auth) return res.status(401).json({ error: "No token" });
+  if (!authHeader) {
+    return res.status(401).json({ message: "Token missing" });
+  }
 
-  const token = auth.split(" ")[1];
+  const token = authHeader.split(" ")[1];
 
   try {
     const decoded = jwt.verify(token, SECRET);
-    res.json({ message: "Protected data", user: decoded });
+    req.user = decoded;
+    next();
   } catch {
-    res.status(403).json({ error: "Invalid token" });
+    return res.status(401).json({ message: "Invalid token" });
   }
+}
+
+// 🔒 Rota protegida
+app.get("/protected", authMiddleware, (req, res) => {
+  res.json({
+    message: "Protected route accessed",
+    user: req.user
+  });
 });
 
-const PORT = process.env.PORT || 8080;
+// 🌐 Rotas existentes
+app.get("/", (req, res) => {
+  res.json({ message: "Secure API running 🚀" });
+});
+
+app.get("/health", (req, res) => {
+  res.json({ status: "ok" });
+});
+
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });
