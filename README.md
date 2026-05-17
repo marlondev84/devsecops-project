@@ -35,7 +35,46 @@ This project was designed to simulate a **real production backend service**, imp
 
 The goal was to create a project aligned with **real DevOps, Cloud, and Backend engineering practices** used in modern production environments.
 
----
+## 🏗️ Architecture Diagram
+
+```mermaid
+flowchart TD
+
+    A[Developer Push] --> B[GitHub Repository]
+
+    B --> C[GitHub Actions CI/CD]
+
+    C --> D[OIDC Workload Identity Federation]
+
+    D --> E[Google Cloud Run]
+
+    E --> F[Node.js + Express API]
+
+    F --> G[JWT Authentication]
+    F --> H[bcrypt Password Hashing]
+
+    F --> I[Cloud SQL PostgreSQL]
+
+    J[Google Secret Manager] --> F
+
+    I --> K[Users Table]
+
+    L[Swagger/OpenAPI Docs] --> F
+```
+
+### Architecture Overview
+
+This project follows a **production-style cloud-native architecture**:
+
+- **GitHub Actions** automatically deploys code after every push to `main`
+- **OIDC Workload Identity Federation** securely authenticates CI/CD with GCP (no service account keys)
+- **Cloud Run** hosts the containerized Node.js backend
+- **Cloud SQL PostgreSQL** stores application users securely
+- **bcrypt** hashes passwords before database storage
+- **JWT authentication** protects private API routes
+- **Google Secret Manager** securely injects credentials into production
+- **Swagger/OpenAPI** provides live API documentation for testing and validation
+
 
 ## 🏗️ Architecture
 
