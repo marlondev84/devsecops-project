@@ -162,56 +162,8 @@ IAM & OIDC Federation
 Fine-grained access control and secure CI/CD authentication without exposed keys.
 
 💡 Key Skills Demonstrated
+
 Backend Development
-API Security
-JWT Authentication
-Password Hashing (bcrypt)
-PostgreSQL Database Design
-Cloud SQL Integration
-Cloud Run Deployment
-Dockerized Applications
-CI/CD Automation
-GitHub Actions
-Secret Management
-IAM Permissions
-OIDC Federation
-Swagger/OpenAPI Documentation
-DevSecOps Best Practices
-📈 Future Improvements
-Unit & Integration Tests with Jest
-Terraform Infrastructure as Code
-Monitoring & Logging
-Rate Limiting
-Role-Based Access Control (RBAC)
-Multi-environment deployments (dev/staging/prod)
-👨‍💻 Author
-
-Marlon Hoeser
-
-DevOps / Cloud / Backend Engineering Portfolio Project
-
-GitHub: https://github.com/marlondev84
-
-LinkedIn: ☁️ Cloud Infrastructure
-Google Cloud Run
-
-Serverless deployment for scalable containerized applications.
-
-Cloud SQL (PostgreSQL)
-
-Managed relational database used for real authentication persistence.
-
-Secret Manager
-
-Secure storage for production secrets and credentials.
-
-IAM & OIDC Federation
-
-Fine-grained access control and secure CI/CD authentication without exposed keys.
-
-💡 Key Skills Demonstrated
-Backend Development
-
 API Security
 JWT Authentication
 Password Hashing (bcrypt)
@@ -228,13 +180,13 @@ Swagger/OpenAPI Documentation
 DevSecOps Best Practices
 
 📈 Future Improvements
+
 Unit & Integration Tests with Jest
 Terraform Infrastructure as Code
 Monitoring & Logging
 Rate Limiting
 Role-Based Access Control (RBAC)
 Multi-environment deployments (dev/staging/prod)
-
 👨‍💻 Author
 
 Marlon Hoeser
@@ -244,4 +196,7 @@ DevOps / Cloud / Backend Engineering Portfolio Project
 GitHub: https://github.com/marlondev84
 
 LinkedIn: www.linkedin.com/in/marlon-hoeser-772986176
+
+
+
 
