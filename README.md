@@ -1,119 +1,247 @@
-# 🚀 DevSecOps Secure API
+# 🔐 Secure API – Production-Style DevSecOps Backend
 
-A production-style **secure API** built with Node.js and deployed on **Google Cloud Run**, following modern **DevSecOps practices**.
+A production-style secure backend API built with **Node.js, PostgreSQL, Google Cloud Run, Cloud SQL, JWT authentication, CI/CD, and Secret Manager**, following modern **cloud-native DevSecOps practices**.
 
----
-
-## 🔐 Key Features
-
-- JWT Authentication (login + protected routes)
-- Secure HTTP headers with Helmet
-- Vulnerability scanning with Trivy
-- Non-root Docker container (security best practice)
-- Healthcheck endpoint for cloud environments
+This project demonstrates real-world backend deployment, secure authentication, cloud infrastructure integration, automated deployment pipelines, and secrets management using Google Cloud Platform.
 
 ---
 
-## ⚙️ Tech Stack
+## 🚀 Live Demo
 
-- Node.js (Express)
-- Docker
-- GitHub Actions (CI/CD)
-- Google Cloud Run (serverless)
-- Artifact Registry
-- Trivy (security scanning)
+### API Endpoint
+https://secure-api-1097545195926.us-central1.run.app
 
----
+### Swagger Documentation
+https://secure-api-1097545195926.us-central1.run.app/docs
 
-## ☁️ Architecture
-
-Local Dev → Docker Build → CI/CD Pipeline → Cloud Run Deployment
-
-- Code pushed to GitHub
-- Pipeline builds Docker image
-- Security scan runs (Trivy)
-- Image deployed automatically to Cloud Run
+### GitHub Repository
+https://github.com/marlondev84/devsecops-project
 
 ---
 
-## 🔁 CI/CD Pipeline
+## 📌 Project Overview
 
-- GitHub Actions workflow
-- OIDC authentication (no static credentials)
-- Automated build, scan, and deploy
+This project was designed to simulate a **real production backend service**, implementing:
 
----
+- Secure JWT authentication
+- Password hashing using bcrypt
+- PostgreSQL database integration
+- Cloud-native deployment to Google Cloud Run
+- Cloud SQL managed PostgreSQL database
+- Secure credential storage with Secret Manager
+- Automated CI/CD pipeline using GitHub Actions
+- OIDC Workload Identity Federation (no static credentials)
+- Interactive Swagger/OpenAPI documentation
 
-## 🔐 Authentication Flow
-
-1. POST `/login` → returns JWT  
-2. Client sends token via header  
-3. Backend validates token  
-4. Access granted to `/protected`
-
-Example:
-
-```bash
-curl -X POST https://your-api-url/login \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"123456"}'
-
-# 🚀 DevSecOps Secure API
-
-A production-style **secure API** built with Node.js and deployed on **Google Cloud Run**, following modern **DevSecOps practices**.
+The goal was to create a project aligned with **real DevOps, Cloud, and Backend engineering practices** used in modern production environments.
 
 ---
 
-## 🔐 Key Features
+## 🏗️ Architecture
 
-- JWT Authentication (login + protected routes)
-- Secure HTTP headers with Helmet
-- Vulnerability scanning with Trivy
-- Non-root Docker container (security best practice)
-- Healthcheck endpoint for cloud environments
+```text
+Developer Push
+       ↓
+GitHub Repository
+       ↓
+GitHub Actions CI/CD
+       ↓
+OIDC Workload Identity Federation
+       ↓
+Google Cloud Run
+       ↓
+Node.js + Express API
+       ↓
+JWT Authentication + bcrypt
+       ↓
+Cloud SQL PostgreSQL
+       ↓
+Google Secret Manager
 
----
+⚙️ Tech Stack
+Backend
+Node.js
+Express.js
+Security
+JWT Authentication
+bcrypt Password Hashing
+Helmet.js
+Google Secret Manager
+Database
+PostgreSQL
+Google Cloud SQL
+Cloud & DevOps
+Google Cloud Run
+GitHub Actions CI/CD
+Workload Identity Federation (OIDC)
+IAM Permissions
+Docker
+Documentation
+Swagger / OpenAPI
+🔐 Security Features
+JWT Authentication
 
-## ⚙️ Tech Stack
+Protected routes require a valid JWT token.
 
-- Node.js (Express)
-- Docker
-- GitHub Actions (CI/CD)
-- Google Cloud Run (serverless)
-- Artifact Registry
-- Trivy (security scanning)
+Password Hashing
 
----
+Passwords are securely hashed using bcrypt before storage.
 
-## ☁️ Architecture
+Secrets Management
 
-Local Dev → Docker Build → CI/CD Pipeline → Cloud Run Deployment
+Sensitive credentials such as:
 
-- Code pushed to GitHub
-- Pipeline builds Docker image
-- Security scan runs (Trivy)
-- Image deployed automatically to Cloud Run
+Database password
+JWT secret
 
----
+are securely stored in Google Secret Manager, avoiding hardcoded credentials or exposed secrets in source code.
 
-## 🔁 CI/CD Pipeline
+Secure Cloud Authentication
 
-- GitHub Actions workflow
-- OIDC authentication (no static credentials)
-- Automated build, scan, and deploy
+CI/CD authentication is implemented using OIDC Workload Identity Federation, eliminating the need for long-lived service account keys.
 
----
+🧪 API Endpoints
+Health Check
+GET /health
 
-## 🔐 Authentication Flow
+Response:
+{
+  "status": "ok"
+}
+Login
+POST /login
 
-1. POST `/login` → returns JWT  
-2. Client sends token via header  
-3. Backend validates token  
-4. Access granted to `/protected`
+Request body:
+{
+  "username": "admin",
+  "password": "123456"
+}
 
-Example:
+Response:
+{
+  "token": "JWT_TOKEN"
+}
+Protected Route
+GET /protected
 
-```bash
-curl -X POST https://your-api-url/login \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"123456"}'
+Authorization:
+
+Bearer YOUR_JWT_TOKEN
+
+Response:
+
+{
+  "message": "Protected route accessed"
+}
+🔄 CI/CD Pipeline
+
+Every push to the main branch automatically triggers:
+
+GitHub Actions workflow
+Secure authentication to GCP using OIDC
+Cloud Run deployment
+Application update in production
+
+This simulates a real production deployment workflow.
+
+☁️ Cloud Infrastructure
+Google Cloud Run
+
+Serverless deployment for scalable containerized applications.
+
+Cloud SQL (PostgreSQL)
+
+Managed relational database used for real authentication persistence.
+
+Secret Manager
+
+Secure storage for production secrets and credentials.
+
+IAM & OIDC Federation
+
+Fine-grained access control and secure CI/CD authentication without exposed keys.
+
+💡 Key Skills Demonstrated
+Backend Development
+API Security
+JWT Authentication
+Password Hashing (bcrypt)
+PostgreSQL Database Design
+Cloud SQL Integration
+Cloud Run Deployment
+Dockerized Applications
+CI/CD Automation
+GitHub Actions
+Secret Management
+IAM Permissions
+OIDC Federation
+Swagger/OpenAPI Documentation
+DevSecOps Best Practices
+📈 Future Improvements
+Unit & Integration Tests with Jest
+Terraform Infrastructure as Code
+Monitoring & Logging
+Rate Limiting
+Role-Based Access Control (RBAC)
+Multi-environment deployments (dev/staging/prod)
+👨‍💻 Author
+
+Marlon Hoeser
+
+DevOps / Cloud / Backend Engineering Portfolio Project
+
+GitHub: https://github.com/marlondev84
+
+LinkedIn: ☁️ Cloud Infrastructure
+Google Cloud Run
+
+Serverless deployment for scalable containerized applications.
+
+Cloud SQL (PostgreSQL)
+
+Managed relational database used for real authentication persistence.
+
+Secret Manager
+
+Secure storage for production secrets and credentials.
+
+IAM & OIDC Federation
+
+Fine-grained access control and secure CI/CD authentication without exposed keys.
+
+💡 Key Skills Demonstrated
+Backend Development
+
+API Security
+JWT Authentication
+Password Hashing (bcrypt)
+PostgreSQL Database Design
+Cloud SQL Integration
+Cloud Run Deployment
+Dockerized Applications
+CI/CD Automation
+GitHub Actions
+Secret Management
+IAM Permissions
+OIDC Federation
+Swagger/OpenAPI Documentation
+DevSecOps Best Practices
+
+📈 Future Improvements
+Unit & Integration Tests with Jest
+Terraform Infrastructure as Code
+Monitoring & Logging
+Rate Limiting
+Role-Based Access Control (RBAC)
+Multi-environment deployments (dev/staging/prod)
+
+👨‍💻 Author
+
+Marlon Hoeser
+
+DevOps / Cloud / Backend Engineering Portfolio Project
+
+GitHub: https://github.com/marlondev84
+
+LinkedIn: www.linkedin.com/in/marlon-hoeser-772986176
+
