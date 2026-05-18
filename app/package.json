@@ -1,4 +1,28 @@
 {
+  "name": "secure-api",
+  "version": "1.0.0",
+  "description": "Production-style DevSecOps backend API built with Node.js, PostgreSQL, Cloud Run, JWT authentication, CI/CD and Secret Manager.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js",
+    "test": "jest --runInBand"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "postgresql",
+    "cloud-run",
+    "cloud-sql",
+    "jwt",
+    "bcrypt",
+    "swagger",
+    "ci-cd",
+    "devsecops",
+    "google-cloud"
+  ],
+  "author": "Marlon Hoeser",
+  "license": "MIT",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
@@ -10,5 +34,9 @@
     "pg": "^8.20.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "jest": "^30.4.2",
+    "supertest": "^7.2.2"
   }
 }
