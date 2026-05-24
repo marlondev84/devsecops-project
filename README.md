@@ -78,24 +78,35 @@ This project follows a **production-style cloud-native architecture**:
 
 ## 🏗️ Architecture
 
-```text
-Developer Push
-       ↓
-GitHub Repository
-       ↓
-GitHub Actions CI/CD
-       ↓
-OIDC Workload Identity Federation
-       ↓
-Google Cloud Run
-       ↓
-Node.js + Express API
-       ↓
-JWT Authentication + bcrypt
-       ↓
-Cloud SQL PostgreSQL
-       ↓
-Google Secret Manager
+```mermaid
+flowchart TD
+
+    A[Developer Push] --> B[GitHub Repository]
+
+    B --> C[GitHub Actions CI/CD]
+
+    C --> D[Jest Automated Tests]
+
+    D --> E[OIDC Workload Identity Federation]
+
+    E --> F[Google Cloud Run]
+
+    F --> G[Node.js + Express API]
+
+    G --> H[JWT Authentication]
+
+    G --> I[bcrypt Password Hashing]
+
+    G --> J[Cloud SQL PostgreSQL]
+
+    K[Google Secret Manager] --> G
+
+    L[Swagger API Docs] --> G
+
+    M[Terraform IaC] --> F
+    M --> J
+    M --> K
+```
 
 ⚙️ Tech Stack
 Backend
@@ -200,32 +211,123 @@ IAM & OIDC Federation
 
 Fine-grained access control and secure CI/CD authentication without exposed keys.
 
-💡 Key Skills Demonstrated
+## 🏗️ Infrastructure as Code (Terraform)
 
-Backend Development
-API Security
-JWT Authentication
-Password Hashing (bcrypt)
-PostgreSQL Database Design
-Cloud SQL Integration
-Cloud Run Deployment
-Dockerized Applications
-CI/CD Automation
-GitHub Actions
-Secret Management
-IAM Permissions
-OIDC Federation
-Swagger/OpenAPI Documentation
-DevSecOps Best Practices
+Infrastructure provisioning and management are handled using **Terraform**, enabling reproducible and production-style cloud environments.
 
-📈 Future Improvements
+Managed resources include:
 
-Unit & Integration Tests with Jest
-Terraform Infrastructure as Code
-Monitoring & Logging
-Rate Limiting
-Role-Based Access Control (RBAC)
-Multi-environment deployments (dev/staging/prod)
+- Google Cloud Run
+- Cloud SQL PostgreSQL
+- Secret Manager integration
+- Cloud SQL connections
+- Environment variables
+- Infrastructure state management
+
+### Why Terraform?
+
+Terraform enables:
+
+- Infrastructure versioning
+- Reproducible deployments
+- Safer infrastructure changes
+- Cloud resource automation
+- Infrastructure consistency across environments
+
+Example workflow:
+
+```bash
+terraform init
+terraform plan
+terraform apply
+```
+
+This project imports and manages existing production infrastructure using **Terraform state reconciliation**, following real-world DevOps practices.
+
+💡 ## 💡 Key Skills Demonstrated
+
+### Backend & API Development
+- Backend Development
+- REST API Design
+- Express.js
+- Node.js
+
+### Security
+- API Security
+- JWT Authentication
+- Password Hashing (bcrypt)
+- Helmet.js Security Headers
+- Secret Management
+- Google Secret Manager
+- IAM Permissions
+
+### Database & Persistence
+- PostgreSQL Database Design
+- Cloud SQL Integration
+- Secure User Authentication Persistence
+
+### Cloud & Infrastructure
+- Google Cloud Run Deployment
+- Dockerized Applications
+- Infrastructure as Code (Terraform)
+- Cloud Infrastructure Management
+- OIDC Workload Identity Federation
+
+### DevOps & CI/CD
+- CI/CD Automation
+- GitHub Actions
+- Automated Testing (Jest + Supertest)
+- Deployment Gating
+- Production-style Cloud Deployments
+
+### Documentation & Observability
+- Swagger / OpenAPI Documentation
+- API Testing & Validation
+
+## 📊 Monitoring & Observability
+
+Production-style monitoring was implemented using Google Cloud Monitoring.
+
+Features include:
+
+- API uptime monitoring
+- Automated health checks
+- Availability validation
+- Failure detection
+- Email alerting
+
+### Uptime Monitoring
+
+Google Cloud continuously checks:
+
+```text
+/health
+```
+
+endpoint availability and triggers alerts if the service becomes unavailable.
+
+This simulates real-world production observability and reliability engineering practices.
+
+### Engineering Practices
+- DevSecOps Best Practices
+- Infrastructure State Management
+- Secure Secret Injection
+- Production-oriented Backend Architecture
+
+---
+
+## 📈 Future Improvements
+
+- Monitoring & Logging (Cloud Monitoring / Logging)
+- Rate Limiting Improvements
+- Role-Based Access Control (RBAC)
+- Multi-environment Deployments (dev / staging / prod)
+- Terraform Expansion for Full Infrastructure Coverage
+- Container Registry Optimization
+- Kubernetes / GKE Deployment
+- Infrastructure Monitoring & Alerts
+- Test Coverage Expansion
+
 👨‍💻 Author
 
 Marlon Hoeser

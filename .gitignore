@@ -7,3 +7,11 @@ app/node_modules/
 coverage/
 
 *.log
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+crash.log
+terraform.tfvars

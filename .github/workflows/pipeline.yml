@@ -2,7 +2,8 @@ name: CI/CD - Secure API
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
 
 jobs:
   deploy:
@@ -10,11 +11,26 @@ jobs:
 
     permissions:
       contents: read
-      id-token: write  # necessário para OIDC
+      id-token: write
+
+    defaults:
+      run:
+        working-directory: ./app
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Jest tests
+        run: npm test
 
       - name: Authenticate to GCP (OIDC)
         uses: google-github-actions/auth@v2
@@ -28,8 +44,8 @@ jobs:
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy secure-api \
-          --source . \
-          --region us-central1 \
-          --allow-unauthenticated \
-          --set-env-vars="DB_USER=apiuser,DB_NAME=securedb,INSTANCE_CONNECTION_NAME=devsecops-494123:us-central1:secure-api-db" \
-          --set-secrets="DB_PASSWORD=DB_PASSWORD:latest,JWT_SECRET=JWT_SECRET:latest"
+            --source . \
+            --region us-central1 \
+            --allow-unauthenticated \
+            --set-env-vars="DB_USER=apiuser,DB_NAME=securedb,INSTANCE_CONNECTION_NAME=devsecops-494123:us-central1:secure-api-db" \
+            --set-secrets="DB_PASSWORD=DB_PASSWORD:latest,JWT_SECRET=JWT_SECRET:latest"

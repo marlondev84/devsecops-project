@@ -10,6 +10,17 @@ const pool = require("./db");
 
 const app = express();
 
+function logEvent(severity, event, metadata = {}) {
+  console.log(
+    JSON.stringify({
+      severity,
+      event,
+      timestamp: new Date().toISOString(),
+      ...metadata,
+    })
+  );
+}
+
 app.use(helmet());
 app.use(express.json());
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
@@ -57,11 +68,27 @@ app.post("/login", async (req, res) => {
     const user = result.rows[0];
 
     // Usuário não encontrado
-    if (!user) {
-      return res.status(401).json({
-        message: "Invalid credentials",
-      });
-    }
+if (!user) {
+  logEvent("WARNING", "login_failed", {
+    username,
+    reason: "user_not_found",
+  });
+
+  return res.status(401).json({
+    message: "Invalid credentials",
+  });
+}
+
+if (!match) {
+  logEvent("WARNING", "login_failed", {
+    username,
+    reason: "wrong_password",
+  });
+
+  return res.status(401).json({
+    message: "Invalid credentials",
+  });
+}
 
     // Compara senha com bcrypt
     const validPassword = await bcrypt.compare(
@@ -82,7 +109,13 @@ app.post("/login", async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    res.json({ token });
+    // ✅ Structured log
+logEvent("INFO", "login_success", {
+  username,
+  userId: user.id,
+});
+
+res.json({ token });
 
   } catch (err) {
     console.error(err);
