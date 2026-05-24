@@ -67,7 +67,7 @@ app.post("/login", async (req, res) => {
 
     const user = result.rows[0];
 
-    // Usuário não encontrado
+  // Usuário não encontrado
 if (!user) {
   logEvent("WARNING", "login_failed", {
     username,
@@ -79,7 +79,14 @@ if (!user) {
   });
 }
 
-if (!match) {
+// Compara senha com bcrypt
+const validPassword = await bcrypt.compare(
+  password,
+  user.password
+);
+
+// Senha incorreta
+if (!validPassword) {
   logEvent("WARNING", "login_failed", {
     username,
     reason: "wrong_password",
@@ -90,26 +97,14 @@ if (!match) {
   });
 }
 
-    // Compara senha com bcrypt
-    const validPassword = await bcrypt.compare(
-      password,
-      user.password
-    );
+// Gera JWT
+const token = jwt.sign(
+  { id: user.id },
+  SECRET,
+  { expiresIn: "1h" }
+);
 
-    if (!validPassword) {
-      return res.status(401).json({
-        message: "Invalid credentials",
-      });
-    }
-
-    // Gera JWT
-    const token = jwt.sign(
-      { id: user.id },
-      SECRET,
-      { expiresIn: "1h" }
-    );
-
-    // ✅ Structured log
+// Structured log
 logEvent("INFO", "login_success", {
   username,
   userId: user.id,
@@ -117,13 +112,17 @@ logEvent("INFO", "login_success", {
 
 res.json({ token });
 
-  } catch (err) {
-    console.error(err);
+} catch (err) {
+  console.error(err);
 
-    res.status(500).json({
-      message: "Internal server error",
-    });
-  }
+  logEvent("ERROR", "login_error", {
+    error: err.message,
+  });
+
+  res.status(500).json({
+    message: "Internal server error",
+  });
+}
 });
 
 // 🔒 Middleware de autenticação
