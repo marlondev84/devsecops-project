@@ -1,343 +1,113 @@
-# 🔐 Secure API – Production-Style DevSecOps Backend
+# 🔐 Secure API – Cloud-Native DevSecOps Backend
 
-A production-style secure backend API built with **Node.js, PostgreSQL, Google Cloud Run, Cloud SQL, JWT authentication, CI/CD, and Secret Manager**, following modern **cloud-native DevSecOps practices**.
+## 📊 Monitoring, Observability & Security Detection
 
-This project demonstrates real-world backend deployment, secure authentication, cloud infrastructure integration, automated deployment pipelines, and secrets management using Google Cloud Platform.
+Production-style observability and security monitoring were implemented using **Google Cloud Monitoring, Cloud Logging, log-based metrics, and alerting policies**.
 
----
+### Observability Features
 
-## 🚀 Live Demo
+* Structured **JSON logging**
+* Centralized **Cloud Logging**
+* **API uptime monitoring**
+* Health check endpoint monitoring
+* Availability validation
+* Automated incident alerting
+* Login failure tracking
+* Security event monitoring
 
-### API Endpoint
-https://secure-api-1097545195926.us-central1.run.app
+### Structured Logging
 
-### Swagger Documentation
-https://secure-api-1097545195926.us-central1.run.app/docs
+Authentication events are logged in structured JSON format for improved troubleshooting and observability.
 
-### GitHub Repository
-https://github.com/marlondev84/devsecops-project
+Example security event:
 
----
-
-## 📌 Project Overview
-
-This project was designed to simulate a **real production backend service**, implementing:
-
-- Secure JWT authentication
-- Password hashing using bcrypt
-- PostgreSQL database integration
-- Cloud-native deployment to Google Cloud Run
-- Cloud SQL managed PostgreSQL database
-- Secure credential storage with Secret Manager
-- Automated CI/CD pipeline using GitHub Actions
-- OIDC Workload Identity Federation (no static credentials)
-- Interactive Swagger/OpenAPI documentation
-
-The goal was to create a project aligned with **real DevOps, Cloud, and Backend engineering practices** used in modern production environments.
-
-## 🏗️ Architecture Diagram
-
-```mermaid
-flowchart TD
-
-    A[Developer Push] --> B[GitHub Repository]
-
-    B --> C[GitHub Actions CI/CD]
-
-    C --> D[OIDC Workload Identity Federation]
-
-    D --> E[Google Cloud Run]
-
-    E --> F[Node.js + Express API]
-
-    F --> G[JWT Authentication]
-    F --> H[bcrypt Password Hashing]
-
-    F --> I[Cloud SQL PostgreSQL]
-
-    J[Google Secret Manager] --> F
-
-    I --> K[Users Table]
-
-    L[Swagger/OpenAPI Docs] --> F
-```
-
-### Architecture Overview
-
-This project follows a **production-style cloud-native architecture**:
-
-- **GitHub Actions** automatically deploys code after every push to `main`
-- **OIDC Workload Identity Federation** securely authenticates CI/CD with GCP (no service account keys)
-- **Cloud Run** hosts the containerized Node.js backend
-- **Cloud SQL PostgreSQL** stores application users securely
-- **bcrypt** hashes passwords before database storage
-- **JWT authentication** protects private API routes
-- **Google Secret Manager** securely injects credentials into production
-- **Swagger/OpenAPI** provides live API documentation for testing and validation
-
-
-## 🏗️ Architecture
-
-```mermaid
-flowchart TD
-
-    A[Developer Push] --> B[GitHub Repository]
-
-    B --> C[GitHub Actions CI/CD]
-
-    C --> D[Jest Automated Tests]
-
-    D --> E[OIDC Workload Identity Federation]
-
-    E --> F[Google Cloud Run]
-
-    F --> G[Node.js + Express API]
-
-    G --> H[JWT Authentication]
-
-    G --> I[bcrypt Password Hashing]
-
-    G --> J[Cloud SQL PostgreSQL]
-
-    K[Google Secret Manager] --> G
-
-    L[Swagger API Docs] --> G
-
-    M[Terraform IaC] --> F
-    M --> J
-    M --> K
-```
-
-⚙️ Tech Stack
-Backend
-Node.js
-Express.js
-Security
-JWT Authentication
-bcrypt Password Hashing
-Helmet.js
-Google Secret Manager
-Database
-PostgreSQL
-Google Cloud SQL
-Cloud & DevOps
-Google Cloud Run
-GitHub Actions CI/CD
-Workload Identity Federation (OIDC)
-IAM Permissions
-Docker
-Documentation
-Swagger / OpenAPI
-🔐 Security Features
-JWT Authentication
-
-Protected routes require a valid JWT token.
-
-Password Hashing
-
-Passwords are securely hashed using bcrypt before storage.
-
-Secrets Management
-
-Sensitive credentials such as:
-
-Database password
-JWT secret
-
-are securely stored in Google Secret Manager, avoiding hardcoded credentials or exposed secrets in source code.
-
-Secure Cloud Authentication
-
-CI/CD authentication is implemented using OIDC Workload Identity Federation, eliminating the need for long-lived service account keys.
-
-🧪 API Endpoints
-Health Check
-GET /health
-
-Response:
+```json
 {
-  "status": "ok"
-}
-Login
-POST /login
-
-Request body:
-{
+  "event": "login_failed",
   "username": "admin",
-  "password": "123456"
+  "reason": "wrong_password",
+  "timestamp": "2026-05-29T13:36:39.857Z"
 }
-
-Response:
-{
-  "token": "JWT_TOKEN"
-}
-Protected Route
-GET /protected
-
-Authorization:
-
-Bearer YOUR_JWT_TOKEN
-
-Response:
-
-{
-  "message": "Protected route accessed"
-}
-🔄 CI/CD Pipeline
-
-Every push to the main branch automatically triggers:
-
-GitHub Actions workflow
-Secure authentication to GCP using OIDC
-Cloud Run deployment
-Application update in production
-
-This simulates a real production deployment workflow.
-
-☁️ Cloud Infrastructure
-Google Cloud Run
-
-Serverless deployment for scalable containerized applications.
-
-Cloud SQL (PostgreSQL)
-
-Managed relational database used for real authentication persistence.
-
-Secret Manager
-
-Secure storage for production secrets and credentials.
-
-IAM & OIDC Federation
-
-Fine-grained access control and secure CI/CD authentication without exposed keys.
-
-## 🏗️ Infrastructure as Code (Terraform)
-
-Infrastructure provisioning and management are handled using **Terraform**, enabling reproducible and production-style cloud environments.
-
-Managed resources include:
-
-- Google Cloud Run
-- Cloud SQL PostgreSQL
-- Secret Manager integration
-- Cloud SQL connections
-- Environment variables
-- Infrastructure state management
-
-### Why Terraform?
-
-Terraform enables:
-
-- Infrastructure versioning
-- Reproducible deployments
-- Safer infrastructure changes
-- Cloud resource automation
-- Infrastructure consistency across environments
-
-Example workflow:
-
-```bash
-terraform init
-terraform plan
-terraform apply
 ```
 
-This project imports and manages existing production infrastructure using **Terraform state reconciliation**, following real-world DevOps practices.
+### Security Monitoring
 
-💡 ## 💡 Key Skills Demonstrated
+The project implements **log-based security metrics** capable of tracking failed authentication attempts.
 
-### Backend & API Development
-- Backend Development
-- REST API Design
-- Express.js
-- Node.js
+A custom metric was created in **Google Cloud Monitoring**:
 
-### Security
-- API Security
-- JWT Authentication
-- Password Hashing (bcrypt)
-- Helmet.js Security Headers
-- Secret Management
-- Google Secret Manager
-- IAM Permissions
+```text
+failed_login_count
+```
 
-### Database & Persistence
-- PostgreSQL Database Design
-- Cloud SQL Integration
-- Secure User Authentication Persistence
+This metric tracks:
 
-### Cloud & Infrastructure
-- Google Cloud Run Deployment
-- Dockerized Applications
-- Infrastructure as Code (Terraform)
-- Cloud Infrastructure Management
-- OIDC Workload Identity Federation
+* Failed login attempts
+* Authentication anomalies
+* Suspicious access patterns
+* Potential brute-force activity
 
-### DevOps & CI/CD
-- CI/CD Automation
-- GitHub Actions
-- Automated Testing (Jest + Supertest)
-- Deployment Gating
-- Production-style Cloud Deployments
+### Threat Detection & Alerting
 
-### Documentation & Observability
-- Swagger / OpenAPI Documentation
-- API Testing & Validation
+A **production-style brute-force detection workflow** was implemented using:
 
-## 📊 Monitoring & Observability
+* Cloud Logging
+* Log-based metrics
+* Google Cloud Monitoring
+* Alert Policies
 
-Production-style monitoring was implemented using Google Cloud Monitoring.
+If failed authentication attempts exceed a configured threshold within a time window, an alert is triggered automatically.
 
-Features include:
-
-- API uptime monitoring
-- Automated health checks
-- Availability validation
-- Failure detection
-- Email alerting
+This simulates **real-world DevSecOps/SRE incident detection workflows**.
 
 ### Uptime Monitoring
 
-Google Cloud continuously checks:
+Google Cloud continuously validates API availability through:
 
 ```text
-/health
+GET /health
 ```
 
-endpoint availability and triggers alerts if the service becomes unavailable.
+The system monitors:
 
-This simulates real-world production observability and reliability engineering practices.
+* Endpoint availability
+* Service uptime
+* Response failures
+* Reliability issues
 
-### Engineering Practices
-- DevSecOps Best Practices
-- Infrastructure State Management
-- Secure Secret Injection
-- Production-oriented Backend Architecture
-
----
+Alerting policies notify failures automatically, following **production reliability engineering practices**.
 
 ## 📈 Future Improvements
 
-- Monitoring & Logging (Cloud Monitoring / Logging)
-- Rate Limiting Improvements
-- Role-Based Access Control (RBAC)
-- Multi-environment Deployments (dev / staging / prod)
-- Terraform Expansion for Full Infrastructure Coverage
-- Container Registry Optimization
-- Kubernetes / GKE Deployment
-- Infrastructure Monitoring & Alerts
-- Test Coverage Expansion
+Planned enhancements include:
 
-👨‍💻 Author
+### Security Enhancements
 
-Marlon Hoeser
+* Role-Based Access Control (RBAC)
+* API rate limiting
+* Refresh token rotation
+* Audit logging expansion
+* Vulnerability scanning automation
+* Dependency vulnerability scanning (SCA)
 
-DevOps / Cloud / Backend Engineering Portfolio Project
+### Cloud Infrastructure
 
-GitHub: https://github.com/marlondev84
+* Full Terraform infrastructure coverage
+* Multi-environment deployments (`dev`, `staging`, `prod`)
+* Kubernetes / GKE migration
+* Cloud cost optimization
 
-LinkedIn: www.linkedin.com/in/marlon-hoeser-772986176
+### Observability & Reliability
 
+* Latency monitoring
+* Error budget tracking
+* SLO/SLI implementation
+* Centralized observability dashboards
+* Distributed tracing
 
+### Testing
 
-
+* Increased automated test coverage
+* Security testing
+* Load testing
+* Integration testing
