@@ -34,14 +34,13 @@ jobs:
 
       # DevSecOps Upgrade — Vulnerability Scan
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.33.1
+        uses: aquasecurity/trivy-action@v0
         with:
-          scan-type: fs
-          scan-ref: ./app
-          format: table
-          severity: HIGH,CRITICAL
-          ignore-unfixed: true
-
+         scan-type: fs
+         scan-ref: ./app
+         format: table
+         severity: HIGH,CRITICAL
+         ignore-unfixed: true
       - name: Authenticate to GCP (OIDC)
         uses: google-github-actions/auth@v2
         with:
