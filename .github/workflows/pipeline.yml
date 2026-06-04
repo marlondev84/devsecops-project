@@ -41,6 +41,7 @@ jobs:
          format: table
          severity: HIGH,CRITICAL
          ignore-unfixed: true
+         exit-code: '1'
          
       - name: Authenticate to GCP (OIDC)
         uses: google-github-actions/auth@v2
