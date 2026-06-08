@@ -1,6 +1,6 @@
 ## 📊 Monitoring, Observability & Security Detection
 
-Production-style **observability, security monitoring, and threat detection** were implemented using **Google Cloud Monitoring, Cloud Logging, log-based metrics, alerting policies, and automated vulnerability scanning**.
+Production-style **observability, security monitoring, threat detection, and secure CI/CD controls** were implemented using **Google Cloud Monitoring, Cloud Logging, log-based metrics, alerting policies, GitHub Actions, and automated vulnerability scanning**.
 
 ### Observability Features
 
@@ -16,6 +16,8 @@ Implemented monitoring capabilities include:
 * Security event monitoring
 * Dependency vulnerability scanning (Trivy)
 * Secret scanning in CI/CD
+* Environment-specific deployment monitoring
+* Multi-environment deployment observability (`dev` / `prod`)
 
 ---
 
@@ -81,14 +83,16 @@ This simulates real-world **DevSecOps, SRE, and security incident detection work
 
 Security is integrated directly into the **CI/CD pipeline**.
 
-Every push to `main` automatically triggers:
+Every deployment automatically triggers:
 
 ```text
-GitHub Actions
+Code Push
 ↓
 Jest Automated Tests
 ↓
 Trivy Vulnerability Scan
+↓
+Deployment Security Gate
 ↓
 OIDC Authentication to Google Cloud
 ↓
@@ -102,7 +106,46 @@ Cloud Run Deployment
 * Dependency security risks
 * Exposed secrets
 
+Deployment is automatically **blocked if HIGH or CRITICAL vulnerabilities are detected**, simulating production-grade **security gating**.
+
 This follows **shift-left security principles**, helping identify vulnerabilities before production deployment.
+
+---
+
+### 🔄 Multi-Environment Deployment Strategy
+
+The project follows a **branch-based deployment model** to improve release safety and environment isolation.
+
+Deployment flow:
+
+```text
+develop branch
+↓
+GitHub Actions
+↓
+Tests + Trivy Security Scan
+↓
+Deploy → secure-api-dev
+```
+
+```text
+main branch
+↓
+GitHub Actions
+↓
+Tests + Trivy Security Scan
+↓
+Deploy → secure-api
+```
+
+This simulates a **production-style SDLC workflow**, reducing deployment risk by separating development and production environments.
+
+Implemented environments:
+
+| Environment | Branch    | Cloud Run Service |
+| ----------- | --------- | ----------------- |
+| Development | `develop` | `secure-api-dev`  |
+| Production  | `main`    | `secure-api`      |
 
 ---
 
@@ -137,12 +180,11 @@ Planned enhancements include:
 * Audit Logging Expansion
 * Dependency Policy Enforcement
 * Security Testing Automation
-* Deployment Security Gating (block deploys on HIGH/CRITICAL vulnerabilities)
 
 ### ☁️ Cloud Infrastructure
 
 * Full Terraform Infrastructure Coverage
-* Multi-Environment Deployments (`dev`, `staging`, `prod`)
+* Multi-Environment Expansion (`staging`)
 * Kubernetes / GKE Migration
 * Cloud Cost Optimization
 
